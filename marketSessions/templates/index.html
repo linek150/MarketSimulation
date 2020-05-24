@@ -1,0 +1,23 @@
+{% extends "base_generic.html" %}
+
+{% block title %}<title>Basic Market Session Simulation</title>{% endblock %}
+
+{% block content %}
+  <h1>Welcom to small market simulation</h1>
+  <p>developed by <em>Piotr Linkowski</em>!</p>
+
+  <p> You have visited this page {{ num_visits }}{% if num_visits == 1 %} time {% else %} times {% endif %}.</p>
+  <button id="register" class="float-left submit-button" >Register</button>
+  <button id="login" class="float-left submit-button" >Login</button>
+
+{% endblock %}
+{% block js %}
+<script type="text/javascript">
+    document.getElementById("register").onclick = () => {
+
+    };
+    document.getElementById("login").onclick = () => {
+        
+    };
+</script>
+{% endblock %}
