@@ -1,14 +1,20 @@
 {% extends "base_generic.html" %}
 
-{% block title %}<title>Basic Market Session Simulation</title>{% endblock %}
+{% block title %}<title>Market Session Simulation</title>{% endblock %}
 
 {% block content %}
-  <h1>Welcom to small market simulation</h1>
-  <p>developed by <em>Piotr Linkowski</em>!</p>
+<div class="index-title">
+  <h1>Welcome to Market Simulation</h1>
+  {% load static %}
+  <img src="{% static 'svg/panBalance.svg' %}" class="scales"></img>
+</div>
 
-  <p> You have visited this page {{ num_visits }}{% if num_visits == 1 %} time {% else %} times {% endif %}.</p>
-  <button id="register" class="float-left submit-button" >Register</button>
-  <button id="login" class="float-left submit-button" >Login</button>
+
+
+  <button id="login">Login</button>
+  <button id="register">Register</button>
+  <a href="{% static 'notexisting/resource' %}">Read instruction</a>
+
 
 {% endblock %}
 {% block js %}
@@ -17,7 +23,18 @@
 
     };
     document.getElementById("login").onclick = () => {
-        
+
     };
+    if ('serviceWorker' in navigator){
+      window.addEventListener('load',()=>{
+
+        navigator.serviceWorker.register("{% url 'sw.js' %}")
+        .then(registration=>{
+          console.log('ServiceWorker is successfuly registered with scope: ',registration.scope);
+        }).catch((err)=>{
+          console.log('ServiceWorker registration failed: ',err.code);
+        });
+      });
+      }
 </script>
 {% endblock %}

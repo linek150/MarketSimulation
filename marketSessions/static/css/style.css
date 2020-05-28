@@ -1,5 +1,63 @@
-.sidebar-nav {
-    margin-top: 20px;
-    padding: 0;
-    list-style: none;
+* {
+    font-family: "Times New Roman", Times,serif;
+    text-align: center;
+}
+/*Adjust relative size of font*/
+@media screen and (min-width: 200px) {
+  body{
+    font-size: 10px;
+  }
+}
+@media screen and (min-width: 1000px) {
+  body{
+    font-size: 24px;
+  }
+}
+@media screen and (min-width: 1800px) {
+  body{
+    font-size: 80px;
+  }
+}
+
+#register,#login {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  font-size: 4em;
+  width: 100%;
+  margin-top: 0.25em;
+  margin-bottom: 0.25em;
+  cursor: pointer;
+}
+
+
+.index-title{
+  font-size: 2em;
+  color: #4CAF50;
+}
+.block-content{
+  width: inherit;
+  height: inherit;
+  display:block
+}
+a{
+  font-size: 2em;
+}
+
+
+@media (orientation: landscape) {
+  .scales{
+    display: none;
+  }
+  .block-content{
+    margin-left: 14%;
+    margin-right: 14%;
+  }
+}
+@media (orientation: portrait) {
+  .scales{
+    height: 10em;
+  }
 }

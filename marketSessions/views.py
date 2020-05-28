@@ -18,3 +18,7 @@ def index(request):
         'num_visits': num_visits,
     }
     return render(request,'index.html',context=context)
+
+def serviceWorker(request):
+
+    return render(request,'serviceWorker.js')
