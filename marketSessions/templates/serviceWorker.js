@@ -3,6 +3,7 @@ var urlsToCache = [
   {% load static %}
   "/",
   "{% static 'svg/panBalance.svg' %}",
+  "{% static 'svg/wheel.svg' %}",
   "{% static 'png/wage.png' %}",
   "{% static 'css/style.css' %}",
   "{% static 'html/offline.html' %}",
@@ -21,7 +22,7 @@ self.addEventListener('install',(event)=>{
   );
   self.skipWaiting();
 });
-//First cache then web, every response is cached
+//First web,then cache every response is cached
 self.addEventListener('fetch',(event)=>{
   console.log(event.request.url,"Inside Fetch");
   event.respondWith(
@@ -38,7 +39,7 @@ self.addEventListener('fetch',(event)=>{
         return caches.match("{% static 'html/status404.html' %}");
       })
       .catch(err=>{
-        console.log("Fetch sie wypierdolił, strone offline: ",err);
+        console.log("Fetch sie wypierdolił, strona offline: ",err);
         return caches.match("{% static 'html/offline.html' %}");
       });
     })

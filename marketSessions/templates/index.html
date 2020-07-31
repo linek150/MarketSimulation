@@ -5,15 +5,17 @@
 {% block content %}
 <div class="index-title">
   <h1>Welcome to Market Simulation</h1>
+  <h2>Rotate to see responsiveness</h2>
   {% load static %}
-  <img src="{% static 'svg/panBalance.svg' %}" class="scales"></img>
+  <img src="{% static 'svg/panBalance.svg' %}" class="svg"></img>
 </div>
 
 
 
   <button id="login">Login</button>
   <button id="register">Register</button>
-  <a href="{% static 'notexisting/resource' %}">Read instruction</a>
+  <a href="{% static 'html/instruction.html' %}">Read instruction</a><br>
+  <a href="{% static 'notexisting/resource' %}">Not existing resource</a>
 
 
 {% endblock %}

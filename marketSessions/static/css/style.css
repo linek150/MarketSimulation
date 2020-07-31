@@ -47,17 +47,21 @@ a{
 }
 
 
+
 @media (orientation: landscape) {
-  .scales{
+  .svg{
     display: none;
   }
   .block-content{
     margin-left: 14%;
     margin-right: 14%;
   }
+  h2{
+    display:none;
+  }
 }
 @media (orientation: portrait) {
-  .scales{
-    height: 10em;
+  .svg{
+    height: 8em;
   }
 }

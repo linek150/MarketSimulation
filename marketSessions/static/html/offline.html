@@ -4,16 +4,268 @@
   <title>Offline Page</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" href="staticfiles/png/wage.png">
-  <link rel="stylesheet" href="staticfiles/css/style.css">
+  <link rel="icon" href="/staticfiles/png/wage.png">
+  <link rel="stylesheet" href="/staticfiles/css/style.css">
 </head>
-<body>
+<body style="margin:0px;">
   <h1>
-    You are now offline.
+     You are now offline.
     <br> You can still visit sites that you have visited before
-    <br>or stay here and play some games.
-  </h1>
+    <br>or stay here and play snake.
 
-  
+    <object type="image/svg+xml" data="/staticfiles/svg/wheel.svg" class="svg"></object>
+  </h1>
+    <canvas class="canvas" height="300" width="300" style="background-color:blueviolet;"></canvas>
+    <button onclick="fullScreen()">Full screen</button>
+    <script>
+        const canvas=document.querySelector(".canvas");
+        const ctx=canvas.getContext("2d");
+        var unit;
+        const minX=0;
+        const minY=0;
+        var maxX;
+        var maxY;
+        var board;
+        var fruit;
+        var snake;
+        //Program Starts here
+        setup();
+
+        //functions' definitions
+        function Snake(x=0,y=0,speedX=1,speedY=0){
+            this.x=x;
+            this.y=y;
+            this.xSpeed=speedX;
+            this.ySpeed=speedY;
+            this.segments=new Array(1);
+            this.segments[0]=[this.x,this.y];
+
+            this.draw=()=>{
+                ctx.fillStyle="#FFFFFF";
+                for(let i=0;i<this.segments.length;i++)
+                {
+                    ctx.fillRect(this.segments[i][0]*unit,this.segments[i][1]*unit,unit,unit);
+                }
+
+            }
+            this.update=()=>{
+                this.x+=this.xSpeed;
+                this.y+=this.ySpeed;
+                if(this.xSpeed!=0){
+                    if(this.x>maxX){
+                        this.x=minX;
+                    }
+                    if(this.x<minX){
+                        this.x=maxX;
+                    }
+                }
+                if(this.ySpeed!=0){
+                    if(this.y>maxY){
+                        this.y=minY;
+                    }
+                    if(this.y<minY){
+                        this.y=maxY;
+                    }
+                }
+                for(let i=this.segments.length-1;i>=0;i--)
+                {
+                    if(i==0)this.segments[i]=[this.x,this.y];
+                    else{
+                        this.segments[i]=[this.segments[i-1][0],this.segments[i-1][1]];
+                        if(this.segments[i][0]==this.x && this.segments[i][1]==this.y)setup();
+                    }
+
+                }
+
+            }
+            this.becomeLonger=()=>{
+                this.segments.push([]);
+            }
+            this.updateSpeed=(direction)=>{
+                if(this.xSpeed!=0){
+
+                    if(direction=="Down")
+                    {
+                        this.ySpeed=1;
+                        this.xSpeed=0;
+                        return;
+                    }
+                    if(direction=="Up")
+                    {
+                        this.ySpeed=-1;
+                        this.xSpeed=0;
+                        return;
+                    }
+                    return;
+                }
+
+                if(direction=="Left"){
+                    this.xSpeed=-1;
+                    this.ySpeed=0;
+                    return;
+                }
+                if(direction=="Right"){
+                    this.xSpeed=1;
+                    this.ySpeed=0;
+                }
+
+            }
+        }
+        function Fruit(){
+            this.x;
+            this.y;
+            this.eaten=false;
+            this.draw=()=>{
+                ctx.fillStyle="#00FF00"
+                ctx.fillRect(this.x*unit,this.y*unit,unit,unit);
+
+
+            }
+            this.generateCoordinates=()=>{
+                let possiblePositionList= new Array(0);
+                for(let row =0;row<maxY;row++)
+                {
+                    for(let column=0;column<maxX;column++ )
+                    {
+                        if(board[row][column]!=1)
+                        possiblePositionList.push(row*board[0].length+column);
+                    }
+                }
+
+
+
+                let rndAllowedPosition=possiblePositionList[Math.floor(Math.random()*possiblePositionList.length)];
+
+
+                this.x=rndAllowedPosition%board[0].length;
+                this.y=(rndAllowedPosition-this.x)/board[0].length;
+                return true;
+            }
+            this.inicialized=this.generateCoordinates();
+        }
+        function setup(){
+            updateUnit();
+            try{
+                snake=new Snake();
+                clearInterval(snakeInterval);
+            }
+            catch{snake=new Snake();}
+            maxY=Math.round(canvas.height/unit);
+            maxX=Math.round(canvas.width/unit);
+            board=generateBoard();
+            snake.update();
+
+            fruit=new Fruit();
+            unit=canvas.width/20;
+
+            snake.draw();
+            fruit.draw();
+            snakeInterval=setSnakeInterval();
+
+        }
+
+        window.addEventListener('keydown',evt=>{
+            if(evt.key=="f")console.log(fruit.x,fruit.y);
+
+            const direction = evt.key.replace('Arrow','');
+            snake.updateSpeed(direction);
+
+
+        });
+        window.addEventListener('touchstart',evt=>{
+            let direction=calculateTouchDir(evt.touches[0]);
+            snake.updateSpeed(direction);
+        });
+
+        function calculateTouchDir(touch){
+
+            const X=touch.clientX;
+            const Y=touch.clientY;
+
+            if(snake.xSpeed==0 ){
+
+                if(X>=snake.x*unit){
+                    return "Right";
+                }
+                else {
+                return "Left";
+                }
+            }
+
+            if(Y>=snake.y*unit){
+                return "Down";
+            }
+            return "Up";
+
+
+        }
+        function updateUnit(){
+            unit=canvas.width/20;
+        }
+        function setSnakeInterval()/*return snake interval obj*/
+        {
+            return window.setInterval(()=>{
+                ctx.clearRect(0,0,canvas.width,canvas.height);
+                snake.update();
+                snake.draw();
+                updateBoard();
+                fruit.draw();
+            },250);
+        }
+        function fullScreen(){
+
+            windowHeight=window.innerHeight;
+            windowWidth=window.innerWidth;
+
+            heightWidthRatio=windowHeight/windowWidth;
+            let unit=windowWidth/20;
+            canvas.width=windowWidth;
+            canvas.height=unit*Math.floor(windowHeight/unit);/*int of unit*/
+            setup();
+        }
+
+        function updateBoard(){
+            if(snakeGetsFruit()){
+                clearBoard();
+                /*put snake on board*/
+                for(let i=0;i<snake.segments.length;i++){
+                    board[snake.segments[i][1]][snake.segments[i][0]]=1;
+                }
+
+                fruit=new Fruit();
+                snake.becomeLonger();
+
+
+            }
+        }
+        function snakeGetsFruit(){
+            try{
+            if(snake.x==fruit.x && snake.y==fruit.y){
+                return true;
+            }
+            return false;
+            }
+            catch{
+                return false;
+            }
+
+        }
+        function clearBoard(){
+            for(let i =0;i<board.length;i++){
+                for(let j=0;j<board[i].length;j++){
+                    board[i][j]=0;
+                }
+            }
+
+        }
+        function generateBoard(){
+
+            let board=new Array(maxY);
+            for (let i = 0;i<board.length;i++){
+                board[i]=new Array(maxX);
+            }
+            return board;
+        }
+    </script>
 </body>
 </html>
